@@ -1,63 +1,85 @@
-# Definimos la función para sumar dos números
-def sumar(a, b):
+# calculadora.py
+
+# Función que suma dos números
+def sumar(a: float, b: float):
     return a + b
 
-# Definimos la función para restar dos números
-def restar(a, b):
+# Función que resta el segundo número al primero
+def restar(a: float, b: float):
     return a - b
 
-# Definimos la función para multiplicar dos números
-def multiplicar(a, b):
+# Función que multiplica dos números
+def multiplicar(a: float, b: float):
     return a * b
 
-# Definimos la función para dividir dos números
-def dividir(a, b):
-    # Comprobamos que el divisor no sea cero para evitar errores
-    if b != 0:
-        return a / b
-    else:
-        return "Error: No se puede dividir entre cero"
+# Función que divide el primer número entre el segundo
+# Si el divisor es cero, devuelve un mensaje de error
+def dividir(a: float, b: float):
+    if b == 0:
+        return "Error: No se puede dividir entre cero."
+    return a / b
 
-# Función principal de la calculadora
-def calculadora():
-    print("Calculadora simple en Python")
-    print("Operaciones disponibles: +, -, *, /")
+# Diccionario que asocia opciones con sus nombres y funciones
+# Clave = número del menú 
+# Valor = tupla con el nombre de la operación y la función correspondiente
+# Ejemplo: '1' -> ("Sumar", sumar)// Donde '1' es la opción del menú, es decir, la clave y ("Sumar", sumar) es el valor
+operaciones = {
+    '1': ("Sumar", sumar),
+    '2': ("Restar", restar),
+    '3': ("Multiplicar", multiplicar),
+    '4': ("Dividir", dividir)
+}
 
-    # Bucle principal que se repite hasta que el usuario escriba "salir"
+# Función para mostrar el menú de operaciones disponibles
+def mostrar_menu():
+    print("\nSelecciona la operación:")
+    for clave, (nombre, _) in operaciones.items():
+        print(f"{clave} - {nombre}")
+    print("5 - Salir")  # Opción para salir del programa
+
+# Función reutilizable para pedir un número al usuario
+# Si el usuario escribe algo inválido, se repite hasta que introduzca un número correcto
+def pedir_numero(texto: str) -> float:
     while True:
-        op = input("\nIntroduce la operación (+, -, *, /) o 'salir' para terminar: ")
-
-        # Si el usuario escribe "salir", termina el programa
-        if op.lower() == "salir":
-            print("¡Hasta luego!")
-            break  # Salimos del bucle
-
-        # Si la operación no es válida, mostramos un mensaje y volvemos al inicio del bucle
-        if op not in ['+', '-', '*', '/']:
-            print("Operación no válida. Intenta de nuevo.")
-            continue
-
         try:
-            # Pedimos los dos números al usuario y los convertimos a float
-            num1 = float(input("Introduce el primer número: "))
-            num2 = float(input("Introduce el segundo número: "))
+            return float(input(texto))
         except ValueError:
-            # Si el usuario introduce texto en lugar de un número, mostramos un error
-            print("Error: Debes introducir números válidos.")
-            continue
+            print("⚠️  Valor no válido. Introduce un número.")
 
-        # Ejecutamos la operación correspondiente según la opción seleccionada
-        if op == '+':
-            resultado = sumar(num1, num2)
-        elif op == '-':
-            resultado = restar(num1, num2)
-        elif op == '*':
-            resultado = multiplicar(num1, num2)
-        elif op == '/':
-            resultado = dividir(num1, num2)
+# Función principal del programa
+def main():
+    print("📟 Calculadora simple en Python")
 
-        # Mostramos el resultado
-        print(f"Resultado: {resultado}")
+    while True:
+        # Mostrar menú en cada vuelta del bucle
+        mostrar_menu()
 
-# Llamamos a la función principal para iniciar la calculadora
-calculadora()
+        # Pedir opción al usuario
+        opcion = input("Opción: ")
+
+        # Salir del programa si elige 5
+        if opcion == '5':
+            print("👋 Gracias por usar la calculadora.")
+            break  # Rompe el bucle y termina el programa
+
+        # Si la opción no está en el diccionario de operaciones, mostrar mensaje de error
+        if opcion not in operaciones:
+            print("❌ Opción no válida.")
+            continue  # Vuelve al principio del bucle
+
+        # Pedir los dos números para operar
+        num1 = pedir_numero("Introduce el primer número: ")
+        num2 = pedir_numero("Introduce el segundo número: ")
+
+        # Buscar en el diccionario el nombre y la función de la operación elegida
+        nombre, funcion = operaciones[opcion]
+
+        # Ejecutar la función con los números proporcionados
+        resultado = funcion(num1, num2)
+
+        # Mostrar el resultado
+        print(f"✅ Resultado de {nombre.lower()}: {resultado}")
+
+# Esta línea se asegura de que main() solo se ejecute si este archivo se ejecuta directamente
+if __name__ == "__main__":
+    main()
